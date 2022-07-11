@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../api';
+import declOfNum from '../lib/decl_Of_Num';
 
 const Users = () => {
    const [users, setUsers] = useState(api.users.fetchAll());
@@ -9,14 +10,15 @@ const Users = () => {
    };
 
    const renderPhrase = (number) => {
-      const classes =
-         'badge m-1 ' + (number === 0 ? 'bg-danger' : 'bg-primary');
+      const classes = `badge m-1 ${number === 0 ? 'bg-danger' : 'bg-primary'}`;
       const text =
          number === 0
             ? 'Никто с тобой не тусанет'
-            : `${number} человек${
-                 number === 2 || number === 3 || number === 4 ? 'a' : ''
-              } тусанет с тобой сегодня`;
+            : `${number} ${declOfNum(number, [
+                 'человек тусанет',
+                 'человека тусанут',
+                 'человек тусанет',
+              ])} с тобой сегодня`;
 
       return <span className={classes}>{text}</span>;
    };
@@ -30,24 +32,26 @@ const Users = () => {
    };
 
    const renderUsers = () => {
-      return users.map((user) => (
-         <tr key={user._id}>
-            <th scope="row">{user.name}</th>
-            <td>{renderQualities(user.qualities)}</td>
-            <td>{user.profession.name}</td>
-            <td>{user.completedMeetings}</td>
-            <td>{user.rate}/5</td>
-            <td>
-               <button
-                  type="button"
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(user._id)}
-               >
-                  Delete
-               </button>
-            </td>
-         </tr>
-      ));
+      return users.map(
+         ({ _id, name, rate, completedMeetings, qualities, profession }) => (
+            <tr key={_id}>
+               <th scope="row">{name}</th>
+               <td>{renderQualities(qualities)}</td>
+               <td>{profession.name}</td>
+               <td>{completedMeetings}</td>
+               <td>{rate}/5</td>
+               <td>
+                  <button
+                     type="button"
+                     className="btn btn-danger btn-sm"
+                     onClick={() => handleDelete(_id)}
+                  >
+                     Delete
+                  </button>
+               </td>
+            </tr>
+         )
+      );
    };
 
    return (
@@ -62,7 +66,7 @@ const Users = () => {
                      <th scope="col">Профессия</th>
                      <th scope="col">Встретился, раз</th>
                      <th scope="col">Оценка</th>
-                     <th scope="col"></th>
+                     <th scope="col" />
                   </tr>
                </thead>
                <tbody>{renderUsers()}</tbody>
