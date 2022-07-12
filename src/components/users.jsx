@@ -2,25 +2,26 @@ import React, { useState } from 'react';
 import api from '../api';
 import declOfNum from '../lib/decl_Of_Num';
 
+const Phrase = ({ number }) => {
+   const classes = `badge m-1 ${number === 0 ? 'bg-danger' : 'bg-primary'}`;
+
+   const text =
+      number === 0
+         ? 'Никто с тобой не тусанет'
+         : `${number} ${declOfNum(number, [
+              'человек тусанет',
+              'человека тусанут',
+              'человек тусанет',
+           ])} с тобой сегодня`;
+
+   return <span className={classes}>{text}</span>;
+};
+
 const Users = () => {
    const [users, setUsers] = useState(api.users.fetchAll());
 
    const handleDelete = (userId) => {
       setUsers((prevState) => prevState.filter((user) => user._id !== userId));
-   };
-
-   const renderPhrase = (number) => {
-      const classes = `badge m-1 ${number === 0 ? 'bg-danger' : 'bg-primary'}`;
-      const text =
-         number === 0
-            ? 'Никто с тобой не тусанет'
-            : `${number} ${declOfNum(number, [
-                 'человек тусанет',
-                 'человека тусанут',
-                 'человек тусанет',
-              ])} с тобой сегодня`;
-
-      return <span className={classes}>{text}</span>;
    };
 
    const renderQualities = (qualities) => {
@@ -56,7 +57,9 @@ const Users = () => {
 
    return (
       <>
-         <h2>{renderPhrase(users.length)}</h2>
+         <h2>
+            <Phrase number={users.length} />
+         </h2>
          {users.length !== 0 && (
             <table className="table">
                <thead>
