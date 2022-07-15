@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* ------------ Stahnev Yura 14.07.22  --------------*/
+.cu-pointer::before {
+  cursor: pointer;
+}
