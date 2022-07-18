@@ -11,12 +11,21 @@ const App = () => {
    };
 
    const handleToggleBookmark = (userId) => {
-      //TODO разобраться почему не работает prevState
-      const newUsersState = users.map((user) => {
+      /*      const newUsersState = users.map((user) => {
          if (user._id === userId) user.bookmark = !user.bookmark;
          return user;
       });
-      setUsers(newUsersState);
+      setUsers(newUsersState);*/
+
+      //TODO разобраться почему не работает prevState
+      // ------------ это не работает ---------------
+      setUsers((prevState) =>
+         prevState.map((u) => {
+            if (u._id === userId) u.bookmark = !u.bookmark;
+            return u;
+         })
+      );
+      // ------------ /это не работает ---------------
    };
 
    return (
