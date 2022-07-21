@@ -11,7 +11,7 @@ const App = () => {
    };
 
    const handleToggleBookmark = (userId) => {
-      //TODO разобраться почему не работает prevState
+      // TODO разобраться почему не работает prevState
       const newUsersState = users.map((user) => {
          if (user._id === userId) user.bookmark = !user.bookmark;
          return user;

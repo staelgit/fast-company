@@ -1,5 +1,6 @@
 import React from 'react';
 import declOfNum from '../lib/decl_Of_Num';
+import PropTypes from 'prop-types';
 
 const SearchStatus = ({ length }) => {
    const classes = `badge m-1 ${length === 0 ? 'bg-danger' : 'bg-primary'}`;
@@ -10,7 +11,7 @@ const SearchStatus = ({ length }) => {
          : `${length} ${declOfNum(length, [
               'человек тусанет',
               'человека тусанут',
-              'человек тусанет',
+              'человек тусанет'
            ])} с тобой сегодня`;
 
    return (
@@ -18,6 +19,10 @@ const SearchStatus = ({ length }) => {
          <span className={classes}>{text}</span>
       </h2>
    );
+};
+
+SearchStatus.propTypes = {
+   length: PropTypes.number.isRequired
 };
 
 export default SearchStatus;

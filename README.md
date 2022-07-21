@@ -1,4 +1,5 @@
-# Junior Frontend Developer Поток 4 Модуль 2. Frontend 3. Композиция компонентов
-## [КП] Задание #2
+# Junior Frontend Developer Поток 4 Модуль 2. Frontend 4. Пагинация
 
-This project is on the web  [fast-company](https://dev.stael.ru/fast-company/).
+## [КП] Задание #3
+
+This project is on the web [fast-company](https://dev.stael.ru/fast-company/).
