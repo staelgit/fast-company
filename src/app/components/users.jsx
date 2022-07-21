@@ -9,6 +9,11 @@ const Users = ({ users, ...rest }) => {
    const pageSize = 4;
    const [currentPage, setCurrentPage] = useState(1);
 
+   const correctPage = Math.ceil(count / pageSize);
+   if (currentPage > correctPage) {
+      setCurrentPage(correctPage);
+   }
+
    const handlePageChange = (pageIndex) => {
       setCurrentPage(pageIndex);
    };
