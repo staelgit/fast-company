@@ -25,7 +25,7 @@ const User = ({
          <td>{completedMeetings}</td>
          <td>{rate}/5</td>
          <td>
-            <div className="d-flex justify-content-center">
+            <div>
                <Bookmark _id={_id} {...rest} />
             </div>
          </td>

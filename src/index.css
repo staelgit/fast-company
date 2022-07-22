@@ -12,7 +12,13 @@ code {
       monospace;
 }
 
-/* ------------ Stahnev Yura 14.07.22  --------------*/
-.cu-pointer::before {
+/* ------------ Stahnev Yura 22.07.22  --------------*/
+.favorites-button {
+   margin-left: 2.3rem;
+   color: #adb5bd;       /* bootstrap $gray-500 */
+}
+
+.favorites-button:hover {
    cursor: pointer;
+   color: #dc3545;      /* bootstrap $danger */
 }
