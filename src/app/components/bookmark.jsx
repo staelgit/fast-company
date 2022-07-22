@@ -5,7 +5,7 @@ const Bookmark = ({ _id, bookmark, onHandleToggleBookmark }) => {
    return (
       <i
          className={`favorites-button bi bi-heart${
-            bookmark === false ? '' : '-fill text-danger'
+            bookmark === false ? '' : '-fill'
          }`}
          onClick={() => onHandleToggleBookmark(_id)}
       />
