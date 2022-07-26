@@ -45,11 +45,22 @@ const User = ({
 User.propTypes = {
    _id: PropTypes.string.isRequired,
    name: PropTypes.string.isRequired,
+   bookmark: PropTypes.bool.isRequired,
    rate: PropTypes.number.isRequired,
    completedMeetings: PropTypes.number.isRequired,
-   qualities: PropTypes.arrayOf(PropTypes.object).isRequired,
-   profession: PropTypes.objectOf(PropTypes.string).isRequired,
-   onHandleDelete: PropTypes.func.isRequired
+   qualities: PropTypes.arrayOf(
+      PropTypes.shape({
+         _id: PropTypes.string,
+         color: PropTypes.string,
+         name: PropTypes.string
+      })
+   ).isRequired,
+   profession: PropTypes.shape({
+      _id: PropTypes.string,
+      name: PropTypes.string
+   }).isRequired,
+   onHandleDelete: PropTypes.func.isRequired,
+   onHandleToggleBookmark: PropTypes.func.isRequired
 };
 
 export default User;

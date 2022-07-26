@@ -53,7 +53,28 @@ const Users = ({ users, ...rest }) => {
 };
 
 Users.propTypes = {
-   users: PropTypes.arrayOf(PropTypes.object).isRequired
+   users: PropTypes.arrayOf(
+      PropTypes.shape({
+         _id: PropTypes.string,
+         name: PropTypes.string,
+         bookmark: PropTypes.bool,
+         rate: PropTypes.number,
+         completedMeetings: PropTypes.number,
+         qualities: PropTypes.arrayOf(
+            PropTypes.shape({
+               _id: PropTypes.string,
+               color: PropTypes.string,
+               name: PropTypes.string
+            })
+         ),
+         profession: PropTypes.shape({
+            _id: PropTypes.string,
+            name: PropTypes.string
+         }),
+         onHandleDelete: PropTypes.func,
+         onHandleToggleBookmark: PropTypes.func
+      })
+   ).isRequired
 };
 
 export default Users;
