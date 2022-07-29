@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import GroupList from './groupList';
 import api from '../api';
 import SearchStatus from './searchStatus';
+import _ from 'lodash';
 
 const Users = ({ users: allUsers, ...rest }) => {
    const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +32,12 @@ const Users = ({ users: allUsers, ...rest }) => {
    };
 
    const filteredUsers = selectedProf
-      ? allUsers.filter((user) => user.profession === selectedProf)
+      ? allUsers.filter((user) => {
+           return _.isEqual(user.profession, selectedProf);
+
+           //  Вариант 2, без лодаша
+           //  JSON.stringify(user.profession) === JSON.stringify(selectedProf)
+        })
       : allUsers;
 
    const count = filteredUsers.length;

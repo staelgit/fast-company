@@ -17,7 +17,10 @@ module.exports = {
          'error',
          3,
          {
-            ignoredNodes: ['ArrayExpression']
+            ignoredNodes: [
+               'ConditionalExpression BlockStatement',
+               'ConditionalExpression ArrayExpression'
+            ]
          }
       ],
       semi: [2, 'always'],
