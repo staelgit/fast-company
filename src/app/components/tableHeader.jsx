@@ -2,8 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
+   const getSortingArrow = () => {
+      return (
+         <i
+            className={`bi-caret-${
+               selectedSort.order === 'asc' ? 'up' : 'down'
+            }-fill`}
+         />
+      );
+   };
    const handleSort = (item) => {
-      if (selectedSort.path === item) {
+      if (selectedSort && selectedSort.path === item) {
          onSort({
             ...selectedSort,
             order: selectedSort.order === 'asc' ? 'desc' : 'asc'
@@ -28,37 +37,11 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                   scope="col"
                >
                   {columns[column].name}
+                  {selectedSort &&
+                     columns[column].path === selectedSort.path &&
+                     getSortingArrow()}
                </th>
             ))}
-            {/* <th onClick={() => handleSort('name')} role="button" scope="col">
-               Имя
-            </th>
-            <th scope="col">Качества</th>
-            <th
-               onClick={() => handleSort('profession.name')}
-               role="button"
-               scope="col"
-            >
-               Профессия
-            </th>
-            <th
-               onClick={() => handleSort('completedMeetings')}
-               role="button"
-               scope="col"
-            >
-               Встретился, раз
-            </th>
-            <th onClick={() => handleSort('rate')} role="button" scope="col">
-               Оценка
-            </th>
-            <th
-               onClick={() => handleSort('bookmark')}
-               role="button"
-               scope="col"
-            >
-               Избранное
-            </th>
-            <th scope="col" /> */}
          </tr>
       </thead>
    );
@@ -69,7 +52,7 @@ TableHeader.propTypes = {
    selectedSort: PropTypes.shape({
       path: PropTypes.string,
       order: PropTypes.string
-   }).isRequired,
+   }),
    columns: PropTypes.shape({
       name: PropTypes.shape({ path: PropTypes.string, name: PropTypes.string }),
       qualities: PropTypes.shape({

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import TableBody from './tableBody';
 import TableHeader from './tableHeader';
 
-const Table = ({ onSort, selectedSort, columns, data, children, ...rest }) => {
+const Table = ({ onSort, selectedSort, columns, data, children }) => {
    return (
       <table className="table">
          {children || (
             <>
                <TableHeader {...{ onSort, selectedSort, columns }} />
-               <TableBody {...{ data, ...rest, columns }} />
+               <TableBody {...{ data, columns }} />
             </>
          )}
       </table>
@@ -34,16 +34,14 @@ Table.propTypes = {
          profession: PropTypes.shape({
             _id: PropTypes.string,
             name: PropTypes.string
-         }),
-         onHandleDelete: PropTypes.func,
-         onHandleToggleBookmark: PropTypes.func
+         })
       })
    ).isRequired,
    onSort: PropTypes.func.isRequired,
    selectedSort: PropTypes.shape({
       path: PropTypes.string,
       order: PropTypes.string
-   }).isRequired,
+   }),
    columns: PropTypes.shape({
       name: PropTypes.shape({ path: PropTypes.string, name: PropTypes.string }),
       qualities: PropTypes.shape({

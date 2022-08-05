@@ -6,10 +6,10 @@ import Table from './table';
 
 const UserTable = ({
    users,
-   onHandleDelete,
+   onDelete,
    onSort,
    selectedSort,
-   ...rest
+   onToggleBookmark
 }) => {
    const columns = {
       name: { path: 'name', name: 'Имя' },
@@ -24,7 +24,13 @@ const UserTable = ({
          path: 'bookmark',
          name: 'Избранное',
          component: (user) => (
-            <Bookmark bookmark={user.bookmark} _id={user._id} {...rest} />
+            <Bookmark
+               {...{
+                  bookmark: user.bookmark,
+                  _id: user._id,
+                  onToggleBookmark
+               }}
+            />
          )
       },
       delete: {
@@ -32,7 +38,7 @@ const UserTable = ({
             <button
                type="button"
                className="btn btn-danger btn-sm"
-               onClick={() => onHandleDelete(user._id)}
+               onClick={() => onDelete(user._id)}
             >
                Delete
             </button>
@@ -40,7 +46,14 @@ const UserTable = ({
       }
    };
    return (
-      <Table {...{ onSort, selectedSort, columns, data: users, ...rest }} />
+      <Table
+         {...{
+            onSort,
+            selectedSort,
+            columns,
+            data: users
+         }}
+      />
    );
 };
 
@@ -71,8 +84,9 @@ UserTable.propTypes = {
    selectedSort: PropTypes.shape({
       path: PropTypes.string,
       order: PropTypes.string
-   }).isRequired,
-   onHandleDelete: PropTypes.func.isRequired
+   }),
+   onDelete: PropTypes.func.isRequired,
+   onToggleBookmark: PropTypes.func.isRequired
 };
 
 export default UserTable;
