@@ -2,15 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
-   const getSortingArrow = () => {
-      return (
-         <i
-            className={`bi-caret-${
-               selectedSort.order === 'asc' ? 'up' : 'down'
-            }-fill`}
-         />
-      );
-   };
    const handleSort = (item) => {
       if (selectedSort && selectedSort.path === item) {
          onSort({
@@ -20,6 +11,16 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
       } else {
          onSort({ path: item, order: 'asc' });
       }
+   };
+
+   const showSortingArrow = () => {
+      return (
+         <i
+            className={`bi-caret-${
+               selectedSort.order === 'asc' ? 'up' : 'down'
+            }-fill`}
+         />
+      );
    };
 
    return (
@@ -39,7 +40,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                   {columns[column].name}
                   {selectedSort &&
                      columns[column].path === selectedSort.path &&
-                     getSortingArrow()}
+                     showSortingArrow()}
                </th>
             ))}
          </tr>
