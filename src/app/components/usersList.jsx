@@ -6,24 +6,29 @@ import Pagination from './pagination';
 import GroupList from './groupList';
 import SearchStatus from './searchStatus';
 import UserTable from './userTable';
+import Loader from './loader';
 
 const PAGING_SIZE = 8;
 
-const Users = () => {
+const UsersList = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [professions, setProfessions] = useState([]);
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
    const [users, setUsers] = useState([]);
-   const [loading, setLoading] = useState(false);
+   // const [loading, setLoading] = useState(false);
+
+   // это стало плохо работать, начинают рендериться отдельные элементы
+   // до того как поменяется состояние лоадинга, если я правильно понимаю что происходит
+   // я переделал без асинхронного стейта лоадинг,
+   // и в компоненте, где отдельно пользователь показывается тоже
+   // в общем я не знаю как это небольшой кровью победить ))
 
    useEffect(() => {
-      setLoading(true);
+      // setLoading(true);
       api.users.fetchAll().then((data) => setUsers(data));
-      api.professions
-         .fetchAll()
-         .then((data) => setProfessions(data))
-         .finally(() => setLoading(false));
+      api.professions.fetchAll().then((data) => setProfessions(data));
+      // .finally(() => setLoading(false));
    }, []);
 
    useEffect(() => {
@@ -53,7 +58,8 @@ const Users = () => {
       setSortBy(item);
    };
 
-   if (loading) return 'Loading...';
+   // if (loading) return 'Loading...';
+   if (!users.length) return <Loader />;
 
    const filteredUsers = selectedProf
       ? users.filter((user) => _.isEqual(user.profession, selectedProf))
@@ -78,7 +84,7 @@ const Users = () => {
 
    return (
       <div className="d-flex">
-         <div className="d-flex flex-column flex-shrink-0 p-3">
+         <div className="d-flex flex-column flex-shrink-0 pe-3">
             <GroupList
                selectedItem={selectedProf}
                items={professions}
@@ -113,4 +119,4 @@ const Users = () => {
    );
 };
 
-export default Users;
+export default UsersList;

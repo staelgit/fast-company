@@ -3,7 +3,7 @@ import declOfNum from '../lib/decl_Of_Num';
 import PropTypes from 'prop-types';
 
 const SearchStatus = ({ length }) => {
-   const classes = `badge m-1 ${length === 0 ? 'bg-danger' : 'bg-primary'}`;
+   const classes = `badge ${length === 0 ? 'bg-danger' : 'bg-primary'}`;
 
    const text =
       length === 0
