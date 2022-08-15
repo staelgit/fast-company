@@ -16,19 +16,10 @@ const UsersList = () => {
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
    const [users, setUsers] = useState([]);
-   // const [loading, setLoading] = useState(false);
-
-   // это стало плохо работать, начинают рендериться отдельные элементы
-   // до того как поменяется состояние лоадинга, если я правильно понимаю что происходит
-   // я переделал без асинхронного стейта лоадинг,
-   // и в компоненте, где отдельно пользователь показывается тоже
-   // в общем я не знаю как это небольшой кровью победить ))
 
    useEffect(() => {
-      // setLoading(true);
       api.users.fetchAll().then((data) => setUsers(data));
       api.professions.fetchAll().then((data) => setProfessions(data));
-      // .finally(() => setLoading(false));
    }, []);
 
    useEffect(() => {
@@ -58,7 +49,6 @@ const UsersList = () => {
       setSortBy(item);
    };
 
-   // if (loading) return 'Loading...';
    if (!users.length) return <Loader />;
 
    const filteredUsers = selectedProf

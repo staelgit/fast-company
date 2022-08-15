@@ -8,18 +8,18 @@ import Loader from './loader';
 const UserPage = ({ id }) => {
    const [user, setUser] = useState({});
    const history = useHistory();
-   // const [userLoading, setUserLoading] = useState(false);
 
    useEffect(() => {
-      // setUserLoading(true);
       api.users.getById(id).then((data) => {
          setUser(data);
-         // setUserLoading(false);
       });
    }, []);
 
+   const handleClick = () => {
+      history.push('/users');
+   };
+
    if (!user || !Object.keys(user).length) return <Loader />;
-   // if (userLoading) return <Loader />;
 
    return (
       <>
@@ -50,9 +50,7 @@ const UserPage = ({ id }) => {
                </tr>
             </tbody>
          </table>
-         <button onClick={() => history.push('/users')}>
-            Все Пользователи
-         </button>
+         <button onClick={handleClick}>Все Пользователи</button>
       </>
    );
 };
