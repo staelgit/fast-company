@@ -7,6 +7,7 @@ import GroupList from './groupList';
 import SearchStatus from './searchStatus';
 import UserTable from './userTable';
 import Loader from './loader';
+import Search from './search';
 
 const PAGING_SIZE = 8;
 
@@ -16,15 +17,30 @@ const UsersList = () => {
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
    const [users, setUsers] = useState([]);
+   const [searchBy, setSearchBy] = useState('');
+   const [loading, setLoading] = useState(false);
 
    useEffect(() => {
-      api.users.fetchAll().then((data) => setUsers(data));
+      setLoading(true);
+      api.users
+         .fetchAll()
+         .then((data) => setUsers(data))
+         .finally(() => setLoading(false));
       api.professions.fetchAll().then((data) => setProfessions(data));
    }, []);
 
    useEffect(() => {
       setCurrentPage(1);
+      if (searchBy && selectedProf) {
+         setSearchBy('');
+      }
    }, [selectedProf]);
+
+   useEffect(() => {
+      if (searchBy && selectedProf) {
+         setSelectedProf(null);
+      }
+   }, [searchBy]);
 
    const handleDelete = (userId) => {
       setUsers((prevState) => prevState.filter((user) => user._id !== userId));
@@ -49,11 +65,20 @@ const UsersList = () => {
       setSortBy(item);
    };
 
-   if (!users.length) return <Loader />;
+   const handleSearch = (searchString) => {
+      setSearchBy(searchString);
+   };
 
-   const filteredUsers = selectedProf
-      ? users.filter((user) => _.isEqual(user.profession, selectedProf))
-      : users;
+   if (loading) return <Loader />;
+
+   const filteredUsers =
+      (selectedProf &&
+         users.filter((user) => _.isEqual(user.profession, selectedProf))) ||
+      (searchBy &&
+         users.filter(({ name }) =>
+            name.toLowerCase().includes(searchBy.toLowerCase())
+         )) ||
+      users;
 
    const count = filteredUsers.length;
 
@@ -73,7 +98,7 @@ const UsersList = () => {
    };
 
    return (
-      <div className="d-flex">
+      <div className="d-flex container-lg">
          <div className="d-flex flex-column flex-shrink-0 pe-3">
             <GroupList
                selectedItem={selectedProf}
@@ -85,8 +110,9 @@ const UsersList = () => {
             </button>
          </div>
 
-         <div className="d-flex flex-column">
+         <div className="d-flex flex-column flex-grow-1">
             <SearchStatus length={count} />
+            <Search onSearchBy={handleSearch} value={searchBy} />
             {count !== 0 && (
                <UserTable
                   users={userCrop}
