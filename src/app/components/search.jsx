@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Search = ({ onSearchBy, value }) => {
-   const handleChange = ({ target }) => {
-      onSearchBy(String(target.value));
-   };
    return (
       <div className="input-group mt-2">
          <span
@@ -17,7 +14,7 @@ const Search = ({ onSearchBy, value }) => {
             placeholder="Введите имя для поиска"
             aria-label="Search"
             aria-describedby="basic-addon1"
-            onChange={handleChange}
+            onChange={({ target }) => onSearchBy(String(target.value))}
             value={value}
          />
       </div>
