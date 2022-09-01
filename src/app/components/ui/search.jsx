@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Search = ({ onSearchBy, value }) => {
+const Search = ({ onHandleSearch, value }) => {
    return (
       <div className="input-group mt-2">
          <span
@@ -14,7 +14,7 @@ const Search = ({ onSearchBy, value }) => {
             placeholder="Введите имя для поиска"
             aria-label="Search"
             aria-describedby="basic-addon1"
-            onChange={({ target }) => onSearchBy(String(target.value))}
+            onChange={({ target }) => onHandleSearch(String(target.value))}
             value={value}
          />
       </div>
@@ -22,7 +22,7 @@ const Search = ({ onSearchBy, value }) => {
 };
 
 Search.propTypes = {
-   onSearchBy: PropTypes.func.isRequired,
+   onHandleSearch: PropTypes.func.isRequired,
    value: PropTypes.string
 };
 

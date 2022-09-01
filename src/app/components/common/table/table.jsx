@@ -43,7 +43,12 @@ Table.propTypes = {
       order: PropTypes.string
    }),
    columns: PropTypes.shape({
-      name: PropTypes.shape({ path: PropTypes.string, name: PropTypes.string }),
+      name: PropTypes.shape({
+         path: PropTypes.string,
+         name: PropTypes.string,
+         component: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+      }),
+
       qualities: PropTypes.shape({
          path: PropTypes.string,
          name: PropTypes.string,
@@ -71,7 +76,7 @@ Table.propTypes = {
          component: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
       })
    }).isRequired,
-   children: PropTypes.arrayOf(PropTypes.object)
+   children: PropTypes.array
 };
 
 export default Table;

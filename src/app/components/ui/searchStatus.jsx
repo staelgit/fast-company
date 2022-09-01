@@ -1,5 +1,5 @@
 import React from 'react';
-import declOfNum from '../lib/decl_Of_Num';
+import declOfNum from '../../lib/decl_Of_Num';
 import PropTypes from 'prop-types';
 
 const SearchStatus = ({ length }) => {

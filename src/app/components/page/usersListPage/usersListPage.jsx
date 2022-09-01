@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../../../api';
 import _ from 'lodash';
-import { paginate } from '../lib/paginate';
-import Pagination from './pagination';
-import GroupList from './groupList';
-import SearchStatus from './searchStatus';
-import UserTable from './userTable';
-import Loader from './loader';
-import Search from './search';
+import { paginate } from '../../../lib/paginate';
+import Pagination from '../../common/pagination';
+import GroupList from '../../common/groupList';
+import SearchStatus from '../../ui/searchStatus';
+import UserTable from '../../ui/userTable';
+import Loader from '../../common/loader';
+import Search from '../../ui/search';
 
 const PAGING_SIZE = 8;
 
-const UsersList = () => {
+const UsersListPage = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [professions, setProfessions] = useState([]);
    const [selectedProf, setSelectedProf] = useState(null);
@@ -65,8 +65,8 @@ const UsersList = () => {
       setSortBy(item);
    };
 
-   const handleSearch = (searchString) => {
-      setSearchBy(searchString);
+   const handleSearch = (searchQuery) => {
+      setSearchBy(searchQuery);
    };
 
    if (loading) return <Loader />;
@@ -112,7 +112,7 @@ const UsersList = () => {
 
          <div className="d-flex flex-column flex-grow-1">
             <SearchStatus length={count} />
-            <Search onSearchBy={handleSearch} value={searchBy} />
+            <Search onHandleSearch={handleSearch} value={searchBy} />
             {count !== 0 && (
                <UserTable
                   users={userCrop}
@@ -135,4 +135,4 @@ const UsersList = () => {
    );
 };
 
-export default UsersList;
+export default UsersListPage;
