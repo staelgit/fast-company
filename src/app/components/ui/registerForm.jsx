@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { validator } from '../../lib/validator';
-import TextField from '../common/form/textField';
 import api from '../../api';
+import TextField from '../common/form/textField';
 import SelectField from '../common/form/selectField';
 import RadioField from '../common/form/radioField';
 import MultiSelectField from '../common/form/multiSelectField';
@@ -17,13 +17,53 @@ const RegisterForm = () => {
       license: false
    });
    const [errors, serErrors] = useState({});
-   const [professions, setProfessions] = useState([]);
-   const [qualities, setQualities] = useState({});
+   const [professions, setProfession] = useState([]);
+   const [qualities, setQualities] = useState([]);
 
    useEffect(() => {
-      api.professions.fetchAll().then((data) => setProfessions(data));
-      api.qualities.fetchAll().then((data) => setQualities(data));
+      api.professions.fetchAll().then((data) => {
+         const professionsList = Object.keys(data).map((professionName) => ({
+            label: data[professionName].name,
+            value: data[professionName]._id
+         }));
+         setProfession(professionsList);
+      });
+      api.qualities.fetchAll().then((data) => {
+         const qualitiesList = Object.keys(data).map((optionName) => ({
+            label: data[optionName].name,
+            value: data[optionName]._id,
+            color: data[optionName].color
+         }));
+         setQualities(qualitiesList);
+      });
    }, []);
+
+   useEffect(() => {
+      validate();
+   }, [data]);
+
+   const getProfessionById = (id) => {
+      for (const prof of professions) {
+         if (prof.value === id) {
+            return { _id: prof.value, name: prof.label };
+         }
+      }
+   };
+   const getQualities = (elements) => {
+      const qualitiesArray = [];
+      for (const elem of elements) {
+         for (const quality in qualities) {
+            if (elem.value === qualities[quality].value) {
+               qualitiesArray.push({
+                  _id: qualities[quality].value,
+                  name: qualities[quality].label,
+                  color: qualities[quality].color
+               });
+            }
+         }
+      }
+      return qualitiesArray;
+   };
 
    const validatorConfig = {
       email: {
@@ -62,10 +102,6 @@ const RegisterForm = () => {
       }
    };
 
-   useEffect(() => {
-      validate();
-   }, [data]);
-
    const validate = () => {
       const errors = validator(data, validatorConfig);
       serErrors(errors);
@@ -83,11 +119,14 @@ const RegisterForm = () => {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-
       const isValid = validate();
       if (!isValid) return;
-
-      console.log('submit');
+      const { profession, qualities } = data;
+      console.log({
+         ...data,
+         profession: getProfessionById(profession),
+         qualities: getQualities(qualities)
+      });
    };
 
    return (
