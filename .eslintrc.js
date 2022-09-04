@@ -17,10 +17,7 @@ module.exports = {
          'error',
          3,
          {
-            ignoredNodes: [
-               'ConditionalExpression *',
-               'FunctionDeclaration SwitchStatement'
-            ]
+            ignoredNodes: ['ConditionalExpression *', 'SwitchStatement']
          }
       ],
       semi: [2, 'always'],

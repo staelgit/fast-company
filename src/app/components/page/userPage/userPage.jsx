@@ -16,7 +16,7 @@ const UserPage = ({ id }) => {
    }, []);
 
    const handleClick = () => {
-      history.push('/users');
+      history.push(`/users/${id}/edit`);
    };
 
    if (!user || !Object.keys(user).length) return <Loader />;
@@ -50,7 +50,7 @@ const UserPage = ({ id }) => {
                </tr>
             </tbody>
          </table>
-         <button onClick={handleClick}>Все Пользователи</button>
+         <button onClick={handleClick}>Изменить</button>
       </>
    );
 };
