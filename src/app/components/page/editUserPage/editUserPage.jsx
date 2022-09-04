@@ -24,29 +24,32 @@ const EditUserPage = ({ id }) => {
    });
 
    useEffect(() => {
-      Promise.all([
-         api.users.getById(id),
-         api.professions.fetchAll(),
-         api.qualities.fetchAll()
-      ]).then((response) => {
-         const [user, professions, qualities] = response;
+      api.users.getById(id).then((data) => {
+         setUser(data);
+      });
+      api.professions.fetchAll().then((data) =>
          setProfession(
-            Object.keys(professions).map((professionName) => ({
-               label: professions[professionName].name,
-               value: professions[professionName]._id
+            Object.keys(data).map((professionName) => ({
+               label: data[professionName].name,
+               value: data[professionName]._id
             }))
-         );
+         )
+      );
+      api.qualities.fetchAll().then((data) =>
          setQualities(
-            Object.keys(qualities).map((optionName) => ({
-               label: qualities[optionName].name,
-               value: qualities[optionName]._id,
-               color: qualities[optionName].color
+            Object.keys(data).map((optionName) => ({
+               label: data[optionName].name,
+               value: data[optionName]._id,
+               color: data[optionName].color
             }))
-         );
-         setUser((prev) => ({
-            ...prev,
-            ...user
-         }));
+         )
+      );
+   }, []);
+
+   const isUserDataExist = Object.keys(user).length;
+
+   useEffect(() => {
+      isUserDataExist &&
          setData({
             name: user.name,
             email: user.email,
@@ -54,11 +57,10 @@ const EditUserPage = ({ id }) => {
             sex: user.sex,
             qualities: getQualities(user.qualities, 'fromApi')
          });
-      });
-   }, []);
+   }, [user]);
 
    useEffect(() => {
-      Object.keys(user).length && validate();
+      isUserDataExist && validate();
    }, [data]);
 
    const validatorConfig = {
@@ -122,7 +124,7 @@ const EditUserPage = ({ id }) => {
       return qualitiesArray;
    };
 
-   if (!data.name) return <Loader />;
+   if (!data.sex) return <Loader />;
 
    const isValid = Object.keys(errors).length === 0;
 
