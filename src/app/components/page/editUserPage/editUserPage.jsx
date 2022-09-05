@@ -11,7 +11,7 @@ import Loader from '../../common/loader';
 
 const EditUserPage = ({ id }) => {
    const history = useHistory();
-   const [user, setUser] = useState({});
+   const [isLoading, setIsLoading] = useState(false);
    const [errors, serErrors] = useState({});
    const [professions, setProfession] = useState([]);
    const [qualities, setQualities] = useState([]);
@@ -24,8 +24,14 @@ const EditUserPage = ({ id }) => {
    });
 
    useEffect(() => {
-      api.users.getById(id).then((data) => {
-         setUser(data);
+      setIsLoading(true);
+      api.users.getById(id).then(({ profession, qualities, ...data }) => {
+         setData((prevState) => ({
+            ...prevState,
+            ...data,
+            qualities: getQualities(qualities, 'fromApi'),
+            profession: profession._id
+         }));
       });
       api.professions.fetchAll().then((data) =>
          setProfession(
@@ -46,21 +52,11 @@ const EditUserPage = ({ id }) => {
       );
    }, []);
 
-   const isUserDataExist = Object.keys(user).length;
-
    useEffect(() => {
-      isUserDataExist &&
-         setData({
-            name: user.name,
-            email: user.email,
-            profession: user.profession._id,
-            sex: user.sex,
-            qualities: getQualities(user.qualities, 'fromApi')
-         });
-   }, [user]);
-
-   useEffect(() => {
-      isUserDataExist && validate();
+      if (data._id) {
+         setIsLoading(false);
+         validate();
+      }
    }, [data]);
 
    const validatorConfig = {
@@ -124,8 +120,6 @@ const EditUserPage = ({ id }) => {
       return qualitiesArray;
    };
 
-   if (!data.sex) return <Loader />;
-
    const isValid = Object.keys(errors).length === 0;
 
    const handleChange = (target) => {
@@ -145,10 +139,12 @@ const EditUserPage = ({ id }) => {
          profession: getProfessionById(profession),
          qualities: getQualities(qualities, 'fromComponent')
       };
-      api.users.update(id, newUserData).then(history.push(`/users/${id}`));
+      api.users
+         .update(id, newUserData)
+         .then((data) => history.push(`/users/${data._id}`));
    };
 
-   return (
+   return !isLoading && Object.keys(professions).length > 0 ? (
       <div className="container mt-4">
          <div className="row">
             <div className="col-md-6 offset-md-3 shadow p-4">
@@ -205,6 +201,8 @@ const EditUserPage = ({ id }) => {
             </div>
          </div>
       </div>
+   ) : (
+      <Loader />
    );
 };
 

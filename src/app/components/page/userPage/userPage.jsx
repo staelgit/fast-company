@@ -16,7 +16,7 @@ const UserPage = ({ id }) => {
    }, []);
 
    const handleClick = () => {
-      history.push(`/users/${id}/edit`);
+      history.push(`${history.location.pathname}/edit`);
    };
 
    if (!user || !Object.keys(user).length) return <Loader />;
