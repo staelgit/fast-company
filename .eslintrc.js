@@ -22,6 +22,9 @@ module.exports = {
       ],
       semi: [2, 'always'],
       'comma-dangle': ['error', 'never'],
-      'space-before-function-paren': ['error', 'never']
+      'space-before-function-paren': [
+         'error',
+         { anonymous: 'always', named: 'never' }
+      ]
    }
 };
