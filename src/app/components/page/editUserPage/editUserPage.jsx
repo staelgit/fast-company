@@ -8,11 +8,12 @@ import SelectField from '../../common/form/selectField';
 import RadioField from '../../common/form/radioField';
 import MultiSelectField from '../../common/form/multiSelectField';
 import Loader from '../../common/loader';
+import BackHistoryButton from '../../common/backButton';
 
 const EditUserPage = ({ id }) => {
    const history = useHistory();
    const [isLoading, setIsLoading] = useState(false);
-   const [errors, serErrors] = useState({});
+   const [errors, setErrors] = useState({});
    const [professions, setProfession] = useState([]);
    const [qualities, setQualities] = useState([]);
    const [data, setData] = useState({
@@ -82,7 +83,7 @@ const EditUserPage = ({ id }) => {
 
    const validate = () => {
       const errors = validator(data, validatorConfig);
-      serErrors(errors);
+      setErrors(errors);
       return Object.keys(errors).length === 0;
    };
 
@@ -146,6 +147,7 @@ const EditUserPage = ({ id }) => {
 
    return !isLoading && Object.keys(professions).length > 0 ? (
       <div className="container mt-4">
+         <BackHistoryButton />
          <div className="row">
             <div className="col-md-6 offset-md-3 shadow p-4">
                <h3 className="mb-3">Редактируем данные пользователя</h3>
