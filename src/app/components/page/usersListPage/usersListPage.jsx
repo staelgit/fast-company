@@ -6,8 +6,9 @@ import Pagination from '../../common/pagination';
 import GroupList from '../../common/groupList';
 import SearchStatus from '../../ui/searchStatus';
 import UserTable from '../../ui/userTable';
-import Loader from '../../common/loader';
+// import Loader from '../../common/loader';
 import Search from '../../ui/search';
+import { useUser } from '../../../hooks/useUsers';
 
 const PAGING_SIZE = 8;
 
@@ -16,16 +17,13 @@ const UsersListPage = () => {
    const [professions, setProfessions] = useState([]);
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
-   const [users, setUsers] = useState([]);
    const [searchBy, setSearchBy] = useState('');
-   const [loading, setLoading] = useState(false);
+   // const [loading, setLoading] = useState(false);
+
+   const { users } = useUser();
+   console.log(users);
 
    useEffect(() => {
-      setLoading(true);
-      api.users
-         .fetchAll()
-         .then((data) => setUsers(data))
-         .finally(() => setLoading(false));
       api.professions.fetchAll().then((data) => setProfessions(data));
    }, []);
 
@@ -43,14 +41,16 @@ const UsersListPage = () => {
    }, [searchBy]);
 
    const handleDelete = (userId) => {
-      setUsers((prevState) => prevState.filter((user) => user._id !== userId));
+      // setUsers((prevState) => prevState.filter((user) => user._id !== userId));
+      console.log(userId);
    };
    const handleToggleBookmark = (userId) => {
       const newUsersState = users.map((user) => {
          if (user._id === userId) user.bookmark = !user.bookmark;
          return user;
       });
-      setUsers(newUsersState);
+      // setUsers(newUsersState);
+      console.log(newUsersState);
    };
 
    const handleProfessionSelect = (item) => {
@@ -69,7 +69,7 @@ const UsersListPage = () => {
       setSearchBy(searchQuery);
    };
 
-   if (loading) return <Loader />;
+   // if (loading) return <Loader />;
 
    const filteredUsers =
       (selectedProf &&

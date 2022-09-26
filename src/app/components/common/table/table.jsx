@@ -24,17 +24,8 @@ Table.propTypes = {
          bookmark: PropTypes.bool,
          rate: PropTypes.number,
          completedMeetings: PropTypes.number,
-         qualities: PropTypes.arrayOf(
-            PropTypes.shape({
-               _id: PropTypes.string,
-               color: PropTypes.string,
-               name: PropTypes.string
-            })
-         ),
-         profession: PropTypes.shape({
-            _id: PropTypes.string,
-            name: PropTypes.string
-         })
+         qualities: PropTypes.array,
+         profession: PropTypes.string
       })
    ).isRequired,
    onSort: PropTypes.func.isRequired,

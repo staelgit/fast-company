@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Bookmark from '../common/bookmark';
-import QualitiesList from './qualities/qualitiesList';
+// import Bookmark from '../common/bookmark';
+
 import Table from '../common/table';
 import { Link } from 'react-router-dom';
+import Profession from './profession';
+import { Qualities } from './qualities';
 
 const UserTable = ({
    users,
    onDelete,
    onSort,
-   selectedSort,
-   onToggleBookmark
+   selectedSort
+   // onToggleBookmark
 }) => {
    const columns = {
       name: {
@@ -20,12 +22,15 @@ const UserTable = ({
       },
       qualities: {
          name: 'Качества',
-         component: (user) => <QualitiesList qualities={user.qualities} />
+         component: (user) => <Qualities selectedQualitiesId={user.qualities} />
       },
-      profession: { path: 'profession.name', name: 'Профессия' },
+      profession: {
+         name: 'Профессия',
+         component: (user) => <Profession id={user.profession} />
+      },
       completedMeetings: { path: 'completedMeetings', name: 'Встретился, раз' },
       rate: { path: 'rate', name: 'Оценка' },
-      bookmark: {
+      /* bookmark: {
          path: 'bookmark',
          name: 'Избранное',
          component: (user) => (
@@ -37,7 +42,7 @@ const UserTable = ({
                }}
             />
          )
-      },
+      }, */
       delete: {
          component: (user) => (
             <button
@@ -70,17 +75,8 @@ UserTable.propTypes = {
          bookmark: PropTypes.bool,
          rate: PropTypes.number,
          completedMeetings: PropTypes.number,
-         qualities: PropTypes.arrayOf(
-            PropTypes.shape({
-               _id: PropTypes.string,
-               color: PropTypes.string,
-               name: PropTypes.string
-            })
-         ),
-         profession: PropTypes.shape({
-            _id: PropTypes.string,
-            name: PropTypes.string
-         }),
+         qualities: PropTypes.array,
+         profession: PropTypes.string,
          onHandleDelete: PropTypes.func,
          onHandleToggleBookmark: PropTypes.func
       })
