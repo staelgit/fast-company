@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Table from '../common/table';
 import { Link } from 'react-router-dom';
 import Profession from './profession';
-import { Qualities } from './qualities';
+import QualitiesList from './qualities';
 
 const UserTable = ({
    users,
@@ -22,7 +22,7 @@ const UserTable = ({
       },
       qualities: {
          name: 'Качества',
-         component: (user) => <Qualities selectedQualitiesId={user.qualities} />
+         component: (user) => <QualitiesList qualities={user.qualities} />
       },
       profession: {
          name: 'Профессия',

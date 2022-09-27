@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Quality from './quality';
+import { useQualities } from '../../../hooks/useQualities';
+import Loader from '../../common/loader';
 
 const QualitiesList = ({ qualities }) => {
+   const { isLoading } = useQualities();
+   if (isLoading) return <Loader />;
    return (
       <>
-         {qualities.map((quality) => (
-            <Quality key={quality._id} {...quality} />
+         {qualities.map((qual) => (
+            <Quality key={qual} id={qual} />
          ))}
       </>
    );
 };
 
 QualitiesList.propTypes = {
-   qualities: PropTypes.arrayOf(
-      PropTypes.shape({
-         _id: PropTypes.string,
-         color: PropTypes.string,
-         name: PropTypes.string
-      })
-   ).isRequired
+   qualities: PropTypes.array.isRequired
 };
 
 export default QualitiesList;
