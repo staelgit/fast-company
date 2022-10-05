@@ -21,7 +21,7 @@ const RegisterForm = () => {
       license: false
    });
    const { signUp } = useAuth();
-   const [errors, serErrors] = useState({});
+   const [errors, setErrors] = useState({});
    const { professions } = useProfession();
    const professionsList = Object.keys(professions).map((professionName) => ({
       label: professions[professionName].name,
@@ -78,7 +78,7 @@ const RegisterForm = () => {
 
    const validate = () => {
       const errors = validator(data, validatorConfig);
-      serErrors(errors);
+      setErrors(errors);
       return Object.keys(errors).length === 0;
    };
 
@@ -103,7 +103,7 @@ const RegisterForm = () => {
          await signUp(newData);
          history.push('/');
       } catch (error) {
-         serErrors(error);
+         setErrors(error);
       }
    };
 
