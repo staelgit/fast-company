@@ -10,29 +10,17 @@ const LoginForm = () => {
    const { signIn } = useAuth();
    const [data, setData] = useState({ email: '', password: '', stayOn: false });
    const [errors, setErrors] = useState({});
+   const [enterError, setEnterError] = useState(null);
 
    const validatorConfig = {
       email: {
          isRequired: {
             massage: 'Электронная почта обязательная для заполнения'
-         },
-         isEmail: {
-            massage: 'Неверный email'
          }
       },
       password: {
          isRequired: {
             massage: 'Поле пароля обязательно для заполнения'
-         },
-         isCapitalSymbol: {
-            massage: 'Должна быть хотя бы одна Заглавная буква'
-         },
-         isContainsDigit: {
-            massage: 'Должна быть хотя бы одна Цифра'
-         },
-         min: {
-            massage: 'Длинна пароля должны быть более 8 символов',
-            value: 8
          }
       }
    };
@@ -54,6 +42,8 @@ const LoginForm = () => {
          ...prev,
          [target.name]: target.value
       }));
+
+      setEnterError(null);
    };
 
    const handleSubmit = async (e) => {
@@ -62,13 +52,11 @@ const LoginForm = () => {
       const isValid = validate();
       if (!isValid) return;
 
-      console.log('submit');
-
       try {
          await signIn(data);
          history.push('/');
       } catch (error) {
-         setErrors(error);
+         setEnterError(error.message);
       }
    };
    return (
@@ -95,9 +83,10 @@ const LoginForm = () => {
          >
             Оставаться в системе
          </CheckBoxField>
+         {enterError && <p className="text-danger">{enterError}</p>}
          <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || enterError}
             className="btn btn-primary w-100 mx-auto"
          >
             Отправить

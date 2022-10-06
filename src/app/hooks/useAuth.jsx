@@ -5,7 +5,12 @@ import userService from '../services/user.service';
 import { toast } from 'react-toastify';
 import { setTokens } from '../services/localStorage.service';
 
-const httpAuth = axios.create();
+const httpAuth = axios.create({
+   baseURL: 'https://identitytoolkit.googleapis.com/v1/',
+   params: {
+      key: process.env.REACT_APP_FIREBASE_KEY
+   }
+});
 
 const AuthContext = React.createContext();
 
@@ -18,9 +23,8 @@ const AuthProvider = ({ children }) => {
    const [error, setError] = useState(null);
 
    async function signUp({ email, password, ...rest }) {
-      const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
       try {
-         const { data } = await httpAuth.post(url, {
+         const { data } = await httpAuth.post(`accounts:signUp`, {
             email,
             password,
             returnSecureToken: true
@@ -43,9 +47,8 @@ const AuthProvider = ({ children }) => {
    }
 
    async function signIn({ email, password }) {
-      const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
       try {
-         const { data } = await httpAuth.post(url, {
+         const { data } = await httpAuth.post(`accounts:signInWithPassword`, {
             email,
             password,
             returnSecureToken: true
@@ -56,32 +59,15 @@ const AuthProvider = ({ children }) => {
          const { code, message } = error.response.data.error;
          console.log(code, message);
          if (code === 400) {
-            let errorObject;
             switch (message) {
-               case 'EMAIL_NOT_FOUND': {
-                  errorObject = {
-                     email: 'Пользователь с таким Email не обнаружен'
-                  };
-                  break;
-               }
-               case 'INVALID_PASSWORD': {
-                  errorObject = {
-                     password:
-                        'Пароль недействителен или у пользователя нет пароля'
-                  };
-                  break;
-               }
-               case 'USER_DISABLED': {
-                  errorObject = {
-                     email: 'Учетная запись пользователя отключена администратором'
-                  };
-                  break;
-               }
+               case 'INVALID_PASSWORD':
+                  throw new Error('Email или пароль введены не корректно');
 
                default:
-                  break;
+                  throw new Error(
+                     'Слишком много попыток входа. Попробуйте позднее'
+                  );
             }
-            throw errorObject;
          }
       }
    }
