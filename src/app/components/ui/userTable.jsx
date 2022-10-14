@@ -9,7 +9,6 @@ import QualitiesList from './qualities';
 
 const UserTable = ({
    users,
-   onDelete,
    onSort,
    selectedSort
    // onToggleBookmark
@@ -29,7 +28,7 @@ const UserTable = ({
          component: (user) => <Profession id={user.profession} />
       },
       completedMeetings: { path: 'completedMeetings', name: 'Встретился, раз' },
-      rate: { path: 'rate', name: 'Оценка' },
+      rate: { path: 'rate', name: 'Оценка' }
       /* bookmark: {
          path: 'bookmark',
          name: 'Избранное',
@@ -43,17 +42,6 @@ const UserTable = ({
             />
          )
       }, */
-      delete: {
-         component: (user) => (
-            <button
-               type="button"
-               className="btn btn-danger btn-sm"
-               onClick={() => onDelete(user._id)}
-            >
-               Delete
-            </button>
-         )
-      }
    };
    return (
       <Table
@@ -86,7 +74,6 @@ UserTable.propTypes = {
       path: PropTypes.string,
       order: PropTypes.string
    }),
-   onDelete: PropTypes.func.isRequired,
    onToggleBookmark: PropTypes.func.isRequired
 };
 

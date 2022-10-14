@@ -8,6 +8,8 @@ import Users from './app/layouts/users';
 import { ProfessionProvider } from './app/hooks/useProfession';
 import { QualitiesProvider } from './app/hooks/useQualities';
 import AuthProvider from './app/hooks/useAuth';
+import ProtectedRoute from './app/components/common/protectedRoute';
+import LogOut from './app/layouts/logOut';
 
 const App = () => {
    return (
@@ -17,8 +19,12 @@ const App = () => {
             <QualitiesProvider>
                <ProfessionProvider>
                   <Switch>
+                     <ProtectedRoute
+                        path="/users/:userId?/:edit?"
+                        component={Users}
+                     />
                      <Route path="/login/:type?" component={Login} />
-                     <Route path="/users/:userId?/:edit?" component={Users} />
+                     <Route path="/logout" component={LogOut} />
                      <Route exact path="/" component={Main} />
                      <Redirect to="/" />
                   </Switch>

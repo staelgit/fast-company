@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../../api';
 import _ from 'lodash';
 import { paginate } from '../../../lib/paginate';
 import Pagination from '../../common/pagination';
@@ -9,23 +8,19 @@ import UserTable from '../../ui/userTable';
 // import Loader from '../../common/loader';
 import Search from '../../ui/search';
 import { useUser } from '../../../hooks/useUsers';
+import { useProfession } from '../../../hooks/useProfession';
+import { useAuth } from '../../../hooks/useAuth';
 
 const PAGING_SIZE = 8;
 
 const UsersListPage = () => {
+   const { users } = useUser();
+   const { currentUser } = useAuth();
+   const { isLoading: professionsLoading, professions } = useProfession();
    const [currentPage, setCurrentPage] = useState(1);
-   const [professions, setProfessions] = useState([]);
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
    const [searchBy, setSearchBy] = useState('');
-   // const [loading, setLoading] = useState(false);
-
-   const { users } = useUser();
-   console.log(users);
-
-   useEffect(() => {
-      api.professions.fetchAll().then((data) => setProfessions(data));
-   }, []);
 
    useEffect(() => {
       setCurrentPage(1);
@@ -69,16 +64,19 @@ const UsersListPage = () => {
       setSearchBy(searchQuery);
    };
 
-   // if (loading) return <Loader />;
+   function filterUsers(data) {
+      const filteredUsers =
+         (selectedProf &&
+            data.filter((user) => _.isEqual(user.profession, selectedProf))) ||
+         (searchBy &&
+            data.filter(({ name }) =>
+               name.toLowerCase().includes(searchBy.toLowerCase())
+            )) ||
+         data;
+      return filteredUsers.filter((user) => user._id !== currentUser._id);
+   }
 
-   const filteredUsers =
-      (selectedProf &&
-         users.filter((user) => _.isEqual(user.profession, selectedProf))) ||
-      (searchBy &&
-         users.filter(({ name }) =>
-            name.toLowerCase().includes(searchBy.toLowerCase())
-         )) ||
-      users;
+   const filteredUsers = filterUsers(users);
 
    const count = filteredUsers.length;
 
@@ -99,16 +97,18 @@ const UsersListPage = () => {
 
    return (
       <div className="d-flex container-lg">
-         <div className="d-flex flex-column flex-shrink-0 pe-3">
-            <GroupList
-               selectedItem={selectedProf}
-               items={professions}
-               onItemSelect={handleProfessionSelect}
-            />
-            <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-               Очистить фильтр
-            </button>
-         </div>
+         {professions && !professionsLoading && (
+            <div className="d-flex flex-column flex-shrink-0 pe-3">
+               <GroupList
+                  selectedItem={selectedProf}
+                  items={professions}
+                  onItemSelect={handleProfessionSelect}
+               />
+               <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+                  Очистить фильтр
+               </button>
+            </div>
+         )}
 
          <div className="d-flex flex-column flex-grow-1">
             <SearchStatus length={count} />

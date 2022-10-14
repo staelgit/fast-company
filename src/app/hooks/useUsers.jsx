@@ -16,7 +16,7 @@ const UserProvider = ({ children }) => {
    const [error, setError] = useState(null);
 
    useEffect(() => {
-      gerUsers();
+      getUsers();
    }, []);
 
    useEffect(() => {
@@ -26,7 +26,7 @@ const UserProvider = ({ children }) => {
       }
    }, [error]);
 
-   async function gerUsers() {
+   async function getUsers() {
       try {
          const { content } = await userService.get();
          setUsers(content);
@@ -42,8 +42,12 @@ const UserProvider = ({ children }) => {
       setIsLoading(false);
    }
 
+   function getUserById(userId) {
+      return users.find((user) => user._id === userId);
+   }
+
    return (
-      <UserContext.Provider value={{ users }}>
+      <UserContext.Provider value={{ users, getUserById }}>
          {!isLoading ? children : <Loader />}
       </UserContext.Provider>
    );
