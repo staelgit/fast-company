@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { validator } from '../../../lib/validator';
-import api from '../../../api';
+import { useHistory } from 'react-router-dom';
+import { useProfession } from '../../../hooks/useProfession';
+import { useQualities } from '../../../hooks/useQualities';
+import { useUser } from '../../../hooks/useUsers';
+import { useAuth } from '../../../hooks/useAuth';
 import TextField from '../../common/form/textField';
 import SelectField from '../../common/form/selectField';
 import RadioField from '../../common/form/radioField';
@@ -12,10 +15,22 @@ import BackHistoryButton from '../../common/backButton';
 
 const EditUserPage = ({ id }) => {
    const history = useHistory();
-   const [isLoading, setIsLoading] = useState(false);
+   const { updateUser, currentUser } = useAuth();
+
+   if (currentUser._id !== id) {
+      history.push(`/users/${currentUser._id}/edit`);
+   }
+
+   const [isLoading, setIsLoading] = useState(true);
    const [errors, setErrors] = useState({});
-   const [professions, setProfession] = useState([]);
+   const { isLoading: professionsLoading, professions: professionsFromHook } =
+      useProfession();
+   const [professions, setProfessions] = useState([]);
+   const { isLoading: qualitiesLoading, qualities: qualitiesFromHook } =
+      useQualities();
    const [qualities, setQualities] = useState([]);
+   const { isLoading: usersLoading, getUserById } = useUser();
+   const [user, setUser] = useState({});
    const [data, setData] = useState({
       name: '',
       email: '',
@@ -25,37 +40,47 @@ const EditUserPage = ({ id }) => {
    });
 
    useEffect(() => {
-      setIsLoading(true);
-      api.users.getById(id).then(({ profession, qualities, ...data }) => {
-         setData((prevState) => ({
-            ...prevState,
-            ...data,
-            qualities: getQualities(qualities, 'fromApi'),
-            profession: profession._id
-         }));
-      });
-      api.professions.fetchAll().then((data) =>
-         setProfession(
-            Object.keys(data).map((professionName) => ({
-               label: data[professionName].name,
-               value: data[professionName]._id
-            }))
-         )
-      );
-      api.qualities.fetchAll().then((data) =>
-         setQualities(
-            Object.keys(data).map((optionName) => ({
-               label: data[optionName].name,
-               value: data[optionName]._id,
-               color: data[optionName].color
-            }))
-         )
-      );
-   }, []);
+      if (!usersLoading) {
+         const user = getUserById(id);
+         setUser(user);
+      }
+   }, [usersLoading, id]);
+
+   useEffect(() => {
+      if (!professionsLoading) {
+         const professions = getProfessions(professionsFromHook);
+         setProfessions(professions);
+      }
+   }, [professionsLoading]);
+
+   useEffect(() => {
+      if (!qualitiesLoading) {
+         const qualities = getQualities(qualitiesFromHook, 'fromApi');
+         setQualities(qualities);
+      }
+   }, [qualitiesLoading]);
+
+   useEffect(() => {
+      if (Object.keys(user).length && qualities.length) {
+         const { name, email, profession, sex, qualities } = user;
+         setData({
+            name,
+            email,
+            profession,
+            sex,
+            qualities: getQualities(qualities, 'byIds')
+         });
+      }
+   }, [user, qualities]);
+
+   useEffect(() => {
+      if (professions.length && qualities.length && data.name && isLoading) {
+         setIsLoading(false);
+      }
+   }, [professions, qualities, data]);
 
    useEffect(() => {
       if (data._id) {
-         setIsLoading(false);
          validate();
       }
    }, [data]);
@@ -87,12 +112,11 @@ const EditUserPage = ({ id }) => {
       return Object.keys(errors).length === 0;
    };
 
-   const getProfessionById = (id) => {
-      for (const prof of professions) {
-         if (prof.value === id) {
-            return { _id: prof.value, name: prof.label };
-         }
-      }
+   const getProfessions = (elements) => {
+      return Object.keys(elements).map((professionName) => ({
+         label: elements[professionName].name,
+         value: elements[professionName]._id
+      }));
    };
 
    const getQualities = (elements, key) => {
@@ -106,12 +130,14 @@ const EditUserPage = ({ id }) => {
             }));
             break;
          }
+         case 'byIds': {
+            qualitiesArray = elements.map((id) =>
+               qualities.find((q) => q.value === id)
+            );
+            break;
+         }
          case 'fromComponent': {
-            qualitiesArray = Object.keys(elements).map((optionName) => ({
-               name: elements[optionName].label,
-               _id: elements[optionName].value,
-               color: elements[optionName].color
-            }));
+            qualitiesArray = elements.map((q) => q.value);
             break;
          }
          default:
@@ -134,18 +160,17 @@ const EditUserPage = ({ id }) => {
       e.preventDefault();
       const isValid = validate();
       if (!isValid) return;
-      const { profession, qualities } = data;
+      const { qualities } = data;
       const newUserData = {
+         ...user,
          ...data,
-         profession: getProfessionById(profession),
          qualities: getQualities(qualities, 'fromComponent')
       };
-      api.users
-         .update(id, newUserData)
-         .then((data) => history.push(`/users/${data._id}`));
+      updateUser(newUserData);
+      history.push(`/users/${id}`);
    };
 
-   return !isLoading && Object.keys(professions).length > 0 ? (
+   return !isLoading ? (
       <div className="container mt-4">
          <BackHistoryButton />
          <div className="row">
