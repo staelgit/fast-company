@@ -1,5 +1,6 @@
-# Junior Frontend Developer Поток 4 Модуль 2. Frontend 17. Авторизация и аутентификация. Часть 2
+# Junior Frontend Developer Поток 4 Модуль 2. Frontend 20. Внедрение Redux в проект. Fast Company
 
-## [КП] Задание #17
+## [КП] Задание #20
+### [КП] professions
 
 This project is on the web [fast-company](http://fast-company.stael.ru/).

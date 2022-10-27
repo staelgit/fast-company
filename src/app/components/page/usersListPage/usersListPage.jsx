@@ -5,23 +5,26 @@ import Pagination from '../../common/pagination';
 import GroupList from '../../common/groupList';
 import SearchStatus from '../../ui/searchStatus';
 import UserTable from '../../ui/userTable';
-// import Loader from '../../common/loader';
 import Search from '../../ui/search';
 import { useUser } from '../../../hooks/useUsers';
-import { useProfession } from '../../../hooks/useProfession';
 import { useAuth } from '../../../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import {
+   getProfessions,
+   getProfessionsLoadingStatus
+} from '../../../store/professions';
 
 const PAGING_SIZE = 8;
 
 const UsersListPage = () => {
    const { users } = useUser();
    const { currentUser } = useAuth();
-   const { isLoading: professionsLoading, professions } = useProfession();
+   const professions = useSelector(getProfessions());
+   const professionsLoading = useSelector(getProfessionsLoadingStatus());
    const [currentPage, setCurrentPage] = useState(1);
    const [selectedProf, setSelectedProf] = useState(null);
    const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
    const [searchBy, setSearchBy] = useState('');
-
    useEffect(() => {
       setCurrentPage(1);
       if (searchBy && selectedProf) {
@@ -36,7 +39,6 @@ const UsersListPage = () => {
    }, [searchBy]);
 
    const handleDelete = (userId) => {
-      // setUsers((prevState) => prevState.filter((user) => user._id !== userId));
       console.log(userId);
    };
    const handleToggleBookmark = (userId) => {
@@ -44,7 +46,6 @@ const UsersListPage = () => {
          if (user._id === userId) user.bookmark = !user.bookmark;
          return user;
       });
-      // setUsers(newUsersState);
       console.log(newUsersState);
    };
 
