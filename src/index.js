@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -7,13 +7,13 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 // import reportWebVitals from './reportWebVitals';
 import App from './App';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-   <BrowserRouter>
-      <React.StrictMode>
+ReactDOM.render(
+   <React.StrictMode>
+      <BrowserRouter>
          <App />
-      </React.StrictMode>
-   </BrowserRouter>
+      </BrowserRouter>
+   </React.StrictMode>,
+   document.getElementById('root')
 );
 
 // reportWebVitals();
