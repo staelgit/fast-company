@@ -29,6 +29,15 @@ const AuthProvider = ({ children }) => {
    const [isLoading, setLoading] = useState(true);
    const history = useHistory();
 
+   async function createUser(data) {
+      try {
+         const { content } = await userService.create(data);
+         setUser(content);
+      } catch (error) {
+         errorCatcher(error);
+      }
+   }
+
    async function updateUserData(data) {
       try {
          const { content } = await userService.update(data);
@@ -103,15 +112,6 @@ const AuthProvider = ({ children }) => {
                   );
             }
          }
-      }
-   }
-
-   async function createUser(data) {
-      try {
-         const { content } = await userService.create(data);
-         setUser(content);
-      } catch (error) {
-         errorCatcher(error);
       }
    }
 
