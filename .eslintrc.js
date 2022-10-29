@@ -14,11 +14,8 @@ module.exports = {
    plugins: ['react'],
    rules: {
       indent: [
-         'error',
-         3,
-         {
-            ignoredNodes: ['ConditionalExpression *', 'SwitchStatement']
-         }
+         0,
+         3
       ],
       semi: [2, 'always'],
       'comma-dangle': ['error', 'never'],

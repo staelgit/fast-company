@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { validator } from '../../../lib/validator';
+import { validator } from '../../../utils/validator';
 import TextField from '../../common/form/textField';
 import SelectField from '../../common/form/selectField';
 import RadioField from '../../common/form/radioField';
@@ -18,12 +18,14 @@ import {
    getProfessions,
    getProfessionsLoadingStatus
 } from '../../../store/professions';
+import { getCurrentUserData } from '../../../store/users';
 
 const EditUserPage = () => {
    const history = useHistory();
    const [isLoading, setIsLoading] = useState(true);
    const [data, setData] = useState();
-   const { currentUser, updateUserData } = useAuth();
+   const currentUser = useSelector(getCurrentUserData());
+   const { updateUserData } = useAuth();
    const qualities = useSelector(getQualities());
    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
    const qualitiesList = Object.keys(qualities).map((optionName) => ({

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { validator } from '../../../lib/validator';
+import { validator } from '../../../utils/validator';
 import TextAreaField from '../form/textAreaField';
 
 const AddCommentForm = ({ onSubmit }) => {
