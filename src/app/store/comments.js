@@ -1,7 +1,7 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import commentService from '../services/comment.service';
 import { nanoid } from 'nanoid';
-import localStorageService from '../services/localStorage.service';
+import { getCurrentUserId } from './users';
 
 const commentsSlice = createSlice({
    name: 'comments',
@@ -40,37 +40,34 @@ const { reducer: commentsReducer, actions } = commentsSlice;
 const { requested, received, requestFiled, commentCreated, commentRemoved } =
    actions;
 
-const commentCreateRequested = createAction('comments/commentCreateRequested');
-const commentCreateFailed = createAction('comments/commentCreateFailed');
-const commentRemoveRequested = createAction('comments/commentRemoveRequested');
-const commentRemoveFailed = createAction('comments/commentRemoveFailed');
+const addCommentRequested = createAction('comments/addCommentRequested');
+const removeCommentRequested = createAction('comments/removeCommentRequested');
 
-export const createComment = (data, userId) => async (dispatch) => {
-   dispatch(commentCreateRequested());
+export const createComment = (payload) => async (dispatch, getState) => {
+   dispatch(addCommentRequested());
    const comment = {
-      ...data,
+      ...payload,
       _id: nanoid(),
-      pageId: userId,
       created_at: Date.now(),
-      userId: localStorageService.getUserId()
+      userId: getCurrentUserId()(getState())
    };
    try {
       const { content } = await commentService.createComment(comment);
       dispatch(commentCreated(content));
    } catch (error) {
-      dispatch(commentCreateFailed());
+      dispatch(requestFiled());
    }
 };
 
 export const removeComment = (commentId) => async (dispatch) => {
-   dispatch(commentRemoveRequested());
+   dispatch(removeCommentRequested());
    try {
       const { content } = await commentService.removeComment(commentId);
       if (content === null) {
          dispatch(commentRemoved(commentId));
       }
    } catch (error) {
-      dispatch(commentRemoveFailed());
+      dispatch(requestFiled());
    }
 };
 

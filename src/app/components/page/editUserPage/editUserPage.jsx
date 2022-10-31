@@ -16,13 +16,13 @@ import {
    getProfessions,
    getProfessionsLoadingStatus
 } from '../../../store/professions';
-import { getCurrentUserData, updateUserData } from '../../../store/users';
+import { getCurrentUserData, updateUser } from '../../../store/users';
 
 const EditUserPage = () => {
-   const dispatch = useDispatch();
    const [isLoading, setIsLoading] = useState(true);
    const [data, setData] = useState();
    const currentUser = useSelector(getCurrentUserData());
+   const dispatch = useDispatch();
    const qualities = useSelector(getQualities());
    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
    const qualitiesList = Object.keys(qualities).map((optionName) => ({
@@ -109,7 +109,7 @@ const EditUserPage = () => {
       }));
    };
 
-   const handleSubmit = async (e) => {
+   const handleSubmit = (e) => {
       e.preventDefault();
       const isValid = validate();
       if (!isValid) return;
@@ -117,7 +117,7 @@ const EditUserPage = () => {
          ...data,
          qualities: data.qualities.map((q) => q.value)
       };
-      dispatch(updateUserData(newData));
+      dispatch(updateUser(newData));
    };
 
    return !isLoading && Object.keys(professions).length > 0 ? (
